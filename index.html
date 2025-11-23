@@ -15,7 +15,6 @@
             color: #3a302a;
         }
 
-        /* CLASSIC + COLORFUL HERO */
         .hero {
             background: linear-gradient(
                 135deg,
@@ -53,7 +52,6 @@
             opacity: 0.95;
         }
 
-        /* INTRO PANEL — ELEGANT STORYBOOK */
         .intro {
             max-width: 900px;
             margin: 50px auto;
@@ -72,7 +70,6 @@
             color: #8d3f26;
         }
 
-        /* GRID */
         .grid {
             max-width: 1250px;
             margin: 60px auto;
@@ -82,7 +79,6 @@
             gap: 55px;
         }
 
-        /* CARD — CLASSIC BOOK FEEL + GRADIENT */
         .card {
             padding: 24px;
             border-radius: 24px;
@@ -112,27 +108,13 @@
             pointer-events: none;
         }
 
-        /* IMAGE PLACEHOLDER — refined gradient */
-        .img-placeholder {
+        /* REAL IMAGES */
+        .img {
             width: 100%;
             height: 190px;
             border-radius: 18px;
-            background: linear-gradient(
-                135deg,
-                #d46a34,
-                #c85f4f,
-                #b17c72,
-                #e8b987
-            );
-            background-size: 200% 200%;
-            animation: shadeShift 10s ease infinite;
+            object-fit: cover;
             margin-bottom: 18px;
-        }
-
-        @keyframes shadeShift {
-            0% { background-position: 0% 40%; }
-            50% { background-position: 100% 60%; }
-            100% { background-position: 0% 40%; }
         }
 
         .card h3 {
@@ -149,7 +131,6 @@
             color: #4d3a31;
         }
 
-        /* FOOTER — warm classic tone */
         footer {
             background: linear-gradient(
                 90deg,
@@ -182,7 +163,7 @@
 <div class="grid">
 
     <div class="card">
-        <div class="img-placeholder"></div>
+        <img src="lib/hero-img-1.jpg" class="img" alt="">
         <h3>Grounded in classic sources, told through living stories.</h3>
         <p>Based on archaeological discoveries and timeless works like <em>Samguk Sagi</em> and <em>Samguk Yusa</em>, K-Story brings Korea’s ancient past to life with both accuracy and heart.</p>
         <p>Neither a dry academic text nor a simplified picture book, it fills a rare middle ground – a chapter book of Korean history in English.</p>
@@ -190,7 +171,7 @@
     </div>
 
     <div class="card">
-        <div class="img-placeholder"></div>
+        <img src="lib/hero-img-2.jpg" class="img" alt="">
         <h3>Where Korea’s Earliest Heroes Come to Life</h3>
         <p><strong>K-Story: History, Legends & Songs of Korea – Book 1: Ancient Kingdoms</strong> invites readers into the dawn of Korean history – a time when kings, generals, and scholars built a nation guided by courage, wisdom, and faith.</p>
         <p>These are the <strong>stories of real people</strong> who dreamed, led, and sacrificed, shaping the values that still define Korea today.</p>
@@ -198,7 +179,7 @@
     </div>
 
     <div class="card">
-        <div class="img-placeholder"></div>
+        <img src="lib/hero-img-3.jpg" class="img" alt="">
         <h3>The First K-pop: Ancient Songs That Traveled Beyond Kingdoms</h3>
         <p>Long before streaming or stadiums, Korea had its own kind of <em>K-pop</em> – songs everyone knew and loved.</p>
         <p>From river paths to mountain villages, melodies spread from voice to voice, carried by emotion and memory rather than machines.</p>
@@ -207,7 +188,7 @@
     </div>
 
     <div class="card">
-        <div class="img-placeholder"></div>
+        <img src="lib/hero-img-4.jpg" class="img" alt="">
         <h3>The First K-dramas: Love Stories That Still Move the Heart</h3>
         <p>In every era, Koreans have told stories of love that shaped both lives and kingdoms.</p>
         <p>These were tales of devotion that defied class and expectation – of feelings so powerful they changed the course of history.</p>
