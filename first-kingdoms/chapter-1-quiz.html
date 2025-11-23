@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chapter 1 Quiz | K-Story</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(180deg, #f7eee5, #f3e2d8, #f9e8d3);
+        color: #3a302a;
+        padding-bottom: 60px;
+    }
+
+    .hero {
+        text-align: center;
+        padding: 70px 20px;
+        background: linear-gradient(135deg, #d46a34, #c8553e, #a1425a);
+        color: #fff9f1;
+        border-bottom: 8px solid #8c3d2d;
+    }
+
+    .hero h1 {
+        margin: 0;
+        font-size: 45px;
+        font-weight: 800;
+    }
+
+    #quiz-box {
+        max-width: 900px;
+        margin: 45px auto;
+        background: linear-gradient(135deg, #f5d6b9, #f7cdb3, #f9e0bf);
+        padding: 28px;
+        border-radius: 20px;
+        border: 2px solid #d8a07c;
+        box-shadow: 0 10px 30px rgba(180,120,80,0.25);
+    }
+
+    button {
+        background: #d46a34;
+        color: #fff9f1;
+        padding: 14px 30px;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        font-weight: 600;
+        display: block;
+        margin: 25px auto 0;
+        font-size: 17px;
+    }
+
+    button:hover {
+        background: #b44f23;
+    }
+
+    .option { margin: 12px 0; }
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+    <h1>Chapter 1 Quiz</h1>
+    <p>One question at a time — let's learn!</p>
+</div>
+
+<div id="quiz-box">
+    <h2 id="q-number">Question 1</h2>
+    <div id="question"></div>
+    <div id="options"></div>
+    <button onclick="submitAnswer()">Next</button>
+    <div id="final"></div>
+</div>
+
+<script>
+// -----------------------------------------
+// QUESTIONS
+// -----------------------------------------
+const QUESTIONS = [
+ {q:"What kind of homes did the earliest people live in?",o:["Stone towers","Half-buried huts","Bamboo houses","Mountain caves"]},
+ {q:"Why were the floors of early huts dug into the ground?",o:["To hide","To keep warmth","For storage","For traps"]},
+ {q:"What did early hunters use?",o:["Bronze swords","Fishing nets","Stone-tipped spears","Iron arrows"]},
+ {q:"Which activity did NOT provide food?",o:["Hunting","Fishing","Mining metals","Gathering berries"]},
+ {q:"Why did villagers plant millet and barley?",o:["Trade","Reliable food","Decoration","Selling"]},
+ {q:"What did people use to harvest grain?",o:["Bronze plows","Wooden hoes & stone sickles","Iron scythes","Metal machines"]},
+ {q:"What stored harvested grain?",o:["Wooden boxes","Clay jars","Underground pits","Baskets"]},
+ {q:"Why is it called comb-pattern pottery?",o:["Shaped like a comb","Made with combs","Lines like a comb dragged","Held combs"]},
+ {q:"What does pottery decoration show?",o:["Only survival mattered","They loved art","They avoided patterns","Copied Europe"]},
+ {q:"What material helped tribes gain power?",o:["Gold","Iron","Bronze","Tin"]},
+ {q:"Why was bronze important?",o:["Easy to find","Stronger tools","Melts easily","Used for food"]},
+ {q:"What symbolized authority?",o:["Shields","Bronze daggers","Masks","Drums"]},
+ {q:"Where are bronze daggers found?",o:["Oceans","Palaces","Graves","Forests"]},
+ {q:"What do dolmens show?",o:["Fear of stone","Honoring leaders","Built for farming","Storing fish"]},
+ {q:"How many dolmens exist?",o:["Hundreds","10,000","30,000+","Millions"]},
+ {q:"What do clans and tribes show?",o:["Lone living","Families united","No cooperation","Animals ruled"]},
+ {q:"What change came as tribes grew?",o:["Cars","Kingdom idea","Stopped farming","Moved underground"]},
+ {q:"What was the first Korean kingdom?",o:["Baekje","Silla","Joseon","Gaya"]},
+ {q:"What does 'Joseon' mean?",o:["Thunder land","Morning Freshness","Golden Hills","Tiger land"]},
+ {q:"Why 'Land of the Morning Calm'?",o:["Quiet all day","Sun rose first","No storms","Tall mountains"]}
+];
+
+// -----------------------------------------
+// CORRECT ANSWERS (OBFUSCATED: XOR 7 + Base64)
+// True answer indexes (0-3) are:
+// [1,1,2,2,1,1,2,2,1,2,1,1,2,1,2,1,1,2,1,1]
+// -----------------------------------------
+const ENCODED = "BgYFBQYGBQUGBQYGBQYFBgYFBgY=";
+
+function decodeAnswers() {
+    const raw = atob(ENCODED);
+    return Array.from(raw).map(ch => ch.charCodeAt(0) ^ 7);
+}
+
+const ANSWERS = decodeAnswers();
+
+// -----------------------------------------
+// SETUP 10 RANDOM QUESTIONS
+// -----------------------------------------
+let pool = Array.from({length: 20}, (_, i) => i);
+pool.sort(() => Math.random() - 0.5);
+pool = pool.slice(0, 10);
+
+let pos = 0;
+let score = 0;
+
+// -----------------------------------------
+// RENDER QUESTION
+// -----------------------------------------
+function showQuestion() {
+    if (pos >= 10) {
+        finish();
+        return;
+    }
+
+    const idx = pool[pos];
+    const q = QUESTIONS[idx];
+
+    document.getElementById("q-number").innerText = `Question ${pos + 1}`;
+    document.getElementById("question").innerText = q.q;
+
+    let html = "";
+    q.o.forEach((opt, i) => {
+        html += `<div class="option">
+            <label><input type="radio" name="opt" value="${i}"> ${opt}</label>
+        </div>`;
+    });
+    document.getElementById("options").innerHTML = html;
+}
+
+showQuestion();
+
+// -----------------------------------------
+// SUBMIT
+// -----------------------------------------
+function submitAnswer() {
+    const selected = document.querySelector("input[name='opt']:checked");
+    if (!selected) {
+        alert("Select an answer!");
+        return;
+    }
+
+    const user = parseInt(selected.value, 10);
+    const correct = ANSWERS[pool[pos]];
+    const correctText = QUESTIONS[pool[pos]].o[correct];
+
+    if (user === correct) {
+        alert("Correct! 🎉");
+        score++;
+    } else {
+        alert(`Incorrect! Correct answer was ${correctText}`);
+    }
+
+    pos++;
+    showQuestion();
+}
+
+// -----------------------------------------
+// FINISH
+// -----------------------------------------
+function finish() {
+    document.getElementById("quiz-box").innerHTML = `
+        <h2>Your Score</h2>
+        <p style="font-size:26px; font-weight:700; text-align:center;">
+            ${score} / 10
+        </p>
+    `;
+}
+</script>
+
+</body>
+</html>
