@@ -57,6 +57,37 @@
 
     .option { margin: 12px 0; }
 </style>
+<!-- additional style tag -->
+<style>
+#toast {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 18px 25px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    max-width: 300px;
+    z-index: 9999;
+}
+#toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+#toast.success {
+    background: #2ecc71;
+}
+#toast.error {
+    background: #e74c3c;
+}
+</style>
+
 </head>
 
 <body>
@@ -73,6 +104,7 @@
     <button onclick="submitAnswer()">Next</button>
     <div id="final"></div>
 </div>
+<div id="toast"></div>
 
 <script>
 // -----------------------------------------
@@ -156,25 +188,34 @@ showQuestion();
 // -----------------------------------------
 function submitAnswer() {
     const selected = document.querySelector("input[name='opt']:checked");
-    if (!selected) {
-        alert("Select an answer!");
-        return;
-    }
+    if (!selected) return showToast("Please pick an answer!", "error");
 
-    const user = parseInt(selected.value, 10);
+    const user = parseInt(selected.value);
     const correct = ANSWERS[pool[pos]];
     const correctText = QUESTIONS[pool[pos]].o[correct];
 
     if (user === correct) {
-        alert("Correct! 🎉");
+        showToast("Correct! 🎉", "success");
         score++;
     } else {
-        alert(`Incorrect! Correct answer was ${correctText}`);
+        showToast("Incorrect! Correct answer:\n" + correctText, "error");
     }
 
     pos++;
     showQuestion();
 }
+
+
+function showToast(msg, type="success") {
+    const t = document.getElementById("toast");
+    t.className = type + " show";
+    t.innerText = msg;
+
+    setTimeout(() => {
+        t.classList.remove("show");
+    }, 2500);
+}
+
 
 // -----------------------------------------
 // FINISH
