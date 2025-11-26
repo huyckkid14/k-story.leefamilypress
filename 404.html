@@ -4,14 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Page Not Found | K-Story</title>
-
     <style>
-        body {
+        html, body {
             margin: 0;
+            padding: 0;
+            min-height: 100vh; /* make sure the whole viewport is covered */
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
             font-family: "Poppins", sans-serif;
             background: linear-gradient(180deg, #f7eee5, #f3e2d8, #f9e8d3);
             color: #3a302a;
-            min-height: 100vh;
         }
 
         /* HERO — same gradient + animation as index and books */
@@ -97,10 +102,11 @@
             text-align: center;
             color: #ffe9d5;
             font-size: 14px;
-            margin-top: 80px;
             border-top: 6px solid #c17b53;
+            margin-top: auto;
         }
     </style>
+
 </head>
 
 <body>
