@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Not Found | K-Story</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(180deg, #f7eee5, #f3e2d8, #f9e8d3);
+            color: #3a302a;
+        }
+
+        /* HERO — same gradient + animation as index and books */
+        .hero {
+            background: linear-gradient(
+                135deg,
+                #d46a34,
+                #c8553e,
+                #a1425a,
+                #6c4a8a,
+                #3e5e9e
+            );
+            background-size: 300% 300%;
+            animation: heroShift 12s ease infinite;
+            padding: 90px 20px;
+            text-align: center;
+            color: #fff9f0;
+            border-bottom: 8px solid #8c3d2d;
+        }
+
+        @keyframes heroShift {
+            0% { background-position: 0% 40%; }
+            50% { background-position: 100% 60%; }
+            100% { background-position: 0% 40%; }
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 52px;
+            font-weight: 800;
+        }
+
+        .hero p {
+            margin-top: 14px;
+            font-size: 20px;
+            opacity: 0.95;
+        }
+
+        .content-box {
+            max-width: 900px;
+            margin: 60px auto;
+            background: linear-gradient(145deg, #fff8f0, #fbe8d8, #f8dcc7);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid #d2a37c;
+            box-shadow: 0 12px 25px rgba(120,80,50,0.25);
+            text-align: center;
+        }
+
+        .content-box h2 {
+            margin: 0;
+            color: #8c3d2d;
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .content-box p {
+            line-height: 1.6;
+            font-size: 17px;
+            margin-bottom: 26px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #d46a34;
+            color: #fff9f0;
+            padding: 12px 26px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background: #b44f23;
+        }
+
+        footer {
+            background: linear-gradient(90deg, #8a3f27, #7b5136, #6a4b47);
+            padding: 25px;
+            text-align: center;
+            color: #ffe9d5;
+            font-size: 14px;
+            margin-top: 80px;
+            border-top: 6px solid #c17b53;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="hero">
+    <h1>404</h1>
+    <p>This page wandered off into a forgotten kingdom.</p>
+</div>
+
+<div class="content-box">
+    <h2>Page Not Found</h2>
+    <p>
+        The page you’re looking for doesn’t seem to exist.<br>
+        Maybe it was lost in the mists of ancient Korea… or perhaps it never existed at all.
+    </p>
+
+    <a href="/" class="btn">Return to K-Story Home</a>
+</div>
+
+<footer>
+    © 2025 K-Story — Classic stories, timeless history.
+</footer>
+
+</body>
+</html>
