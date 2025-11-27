@@ -28,15 +28,68 @@
         font-size: 45px;
         font-weight: 800;
     }
+    .hero p {
+        margin-top: 12px;
+        font-size: 18px;
+        opacity: 0.95;
+    }
 
+    /* QUIZ BOX */
     #quiz-box {
         max-width: 900px;
         margin: 45px auto;
-        background: linear-gradient(135deg, #f5d6b9, #f7cdb3, #f9e0bf);
-        padding: 28px;
-        border-radius: 20px;
-        border: 2px solid #d8a07c;
-        box-shadow: 0 10px 30px rgba(180,120,80,0.25);
+        padding: 35px;
+        background: #fff7ef;
+        border-radius: 22px;
+        border: 2px solid #e3bfa3;
+        box-shadow: 0 14px 35px rgba(180,120,80,0.28);
+        transition: 0.25s ease;
+    }
+
+    #q-number {
+        font-size: 28px;
+        font-weight: 800;
+        text-align: center;
+        color: #a24a34;
+        margin-bottom: 10px;
+    }
+
+    #question {
+        font-size: 22px;
+        font-weight: 600;
+        text-align: center;
+        margin: 20px 0 30px;
+    }
+
+    #options {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 14px;
+        margin: 10px 0 20px;
+    }
+
+    .option {
+        background: #fbe9da;
+        padding: 12px 20px;
+        border-radius: 12px;
+        border: 2px solid #e6c6a7;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        font-size: 18px;
+        transition: 0.2s;
+    }
+
+    .option:hover {
+        background: #f6dfcc;
+        transform: translateY(-2px);
+    }
+
+    .option input {
+        transform: scale(1.3);
+        margin-right: 10px;
+        cursor: pointer;
     }
 
     button {
@@ -48,49 +101,129 @@
         cursor: pointer;
         font-weight: 600;
         display: block;
-        margin: 25px auto 0;
-        font-size: 17px;
+        margin: 30px auto 0;
+        font-size: 18px;
+        transition: 0.2s;
     }
 
     button:hover {
         background: #b44f23;
+        transform: translateY(-2px);
     }
 
-    .option { margin: 12px 0; }
-</style>
-<!-- additional style tag -->
-<style>
-#toast {
-    position: fixed;
-    bottom: 25px;
-    right: 25px;
-    background: rgba(0,0,0,0.85);
-    color: #fff;
-    padding: 18px 25px;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: 600;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(20px);
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    max-width: 300px;
-    z-index: 9999;
-}
-#toast.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-#toast.success {
-    background: #2ecc71;
-}
-#toast.error {
-    background: #e74c3c;
-}
-</style>
+    /* Toast */
+    #toast {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        background: rgba(0,0,0,0.85);
+        color: #fff;
+        padding: 18px 25px;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(30px);
+        transition: 0.3s ease;
+        max-width: 300px;
+        z-index: 9999;
+        white-space: pre-line;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+    #toast.success { background: #2ecc71; }
+    #toast.error { background: #e74c3c; }
 
+    /* Certificate Name Input */
+    #name-screen {
+        display: none;
+        max-width: 500px;
+        margin: 90px auto;
+        background: #ffffff;
+        padding: 35px;
+        border-radius: 14px;
+        border: 2px solid #d3c2a8;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        text-align: center;
+    }
+
+    #name-screen input {
+        width: 80%;
+        padding: 14px;
+        border-radius: 10px;
+        font-size: 18px;
+        border: 2px solid #c3b199;
+    }
+
+    /* Certificate */
+    #certificate {
+        display: none;
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .cert-box {
+        position: relative;
+        background: #fffef8;
+        padding: 90px 70px 70px;
+        max-width: 900px;
+        margin: auto;
+        border-radius: 20px;
+        border: 12px solid #b08a52;
+
+        background-image: 
+            radial-gradient(circle, rgba(0,0,0,0.03) 1px, transparent 1px),
+            linear-gradient(135deg, #fffef8, #faf5e8);
+        background-size: 14px 14px, 100%;
+        box-shadow: 0 10px 50px rgba(0,0,0,0.20);
+    }
+
+    .gold-watermark {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 420px;
+        height: 420px;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, #fff8c9, #f7d774 35%, #e6b84c 60%, #b8912d 100%);
+        opacity: 0.12;
+        box-shadow:
+            inset 0 0 30px rgba(255,255,255,0.45),
+            inset 0 0 60px rgba(255,255,255,0.25);
+        pointer-events: none;
+        user-select: none;
+    }
+
+    .microtext-border {
+        position: absolute;
+        top: 15px; left: 15px; right: 15px; bottom: 15px;
+        border: 2px solid #b08a52;
+        border-radius: 10px;
+        padding: 6px;
+        font-size: 6px;
+        line-height: 6px;
+        letter-spacing: 1px;
+        color: #8e754a;
+        text-align: center;
+        pointer-events: none;
+        user-select: none;
+    }
+
+    .cert-name {
+        font-size: 36px;
+        font-weight: 700;
+        color: #333;
+        margin-top: 20px;
+    }
+
+    .cert-score {
+        font-size: 26px;
+        margin-top: 12px;
+    }
+
+</style>
 </head>
-
 <body>
 
 <div class="hero">
@@ -98,74 +231,106 @@
     <p>One question at a time — let's learn!</p>
 </div>
 
+<!-- QUIZ -->
 <div id="quiz-box">
     <h2 id="q-number">Question 1</h2>
     <div id="question"></div>
     <div id="options"></div>
     <button onclick="submitAnswer()">Next</button>
-    <div id="final"></div>
 </div>
+
 <div id="toast"></div>
 
+<!-- NAME ENTRY -->
+<div id="name-screen">
+    <h2>Enter Your Name</h2>
+    <input type="text" id="studentName" placeholder="Your name...">
+    <button onclick="generateCertificate()">Generate Certificate</button>
+</div>
+
+<!-- CERTIFICATE -->
+<div id="certificate">
+    <div class="cert-box">
+        <div class="gold-watermark"></div>
+
+        <div class="microtext-border">
+            OFFICIAL K-STORY CERTIFICATE • VERIFIED • AUTHENTIC • NOT FORGERY •
+        </div>
+
+        <h1>Certificate of Achievement</h1>
+        <p>This certifies that</p>
+
+        <div id="cert-name" class="cert-name"></div>
+
+        <p>has successfully completed the Chapter 1 Quiz.</p>
+
+        <p id="cert-score" class="cert-score"></p>
+
+        <p id="cert-date" class="cert-score"></p>
+        <p id="cert-id" class="cert-score" style="font-size:14px; font-family:monospace;"></p>
+
+        <p style="margin-top:25px;">Presented by K-Story Learning</p>
+    </div>
+    
+</div>
+<center><button id="downloadCert" style="
+    margin-top:25px;
+    padding:12px 28px;
+    border:none;
+    border-radius:10px;
+    background:#b57d38;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+    font-weight:600;
+    display: none;
+">Download Certificate</button>
+</center>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <script>
-// -----------------------------------------
+document.getElementById("downloadCert").addEventListener("click", function () {
+    const cert = document.querySelector(".cert-box");
+
+    html2canvas(cert, {
+        scale: 3,        // super HD
+        backgroundColor: null
+    }).then(canvas => {
+        const link = document.createElement("a");
+        link.download = "kstory_certificate.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+    });
+});
+</script>
+
+
+<script>
 // QUESTIONS
-// -----------------------------------------
 const QUESTIONS = [
- {q:"What kind of homes did the earliest people live in?",o:["Stone towers","Half-buried huts","Bamboo houses","Mountain caves"]},
- {q:"Why were the floors of early huts dug into the ground?",o:["To hide","To keep warmth","For storage","For traps"]},
- {q:"What did early hunters use?",o:["Bronze swords","Fishing nets","Stone-tipped spears","Iron arrows"]},
- {q:"Which activity did NOT provide food?",o:["Hunting","Fishing","Mining metals","Gathering berries"]},
- {q:"Why did villagers plant millet and barley?",o:["Trade","Reliable food","Decoration","Selling"]},
- {q:"What did people use to harvest grain?",o:["Bronze plows","Wooden hoes & stone sickles","Iron scythes","Metal machines"]},
- {q:"What stored harvested grain?",o:["Wooden boxes","Clay jars","Underground pits","Baskets"]},
- {q:"Why is it called comb-pattern pottery?",o:["Shaped like a comb","Made with combs","Lines like a comb dragged","Held combs"]},
- {q:"What does pottery decoration show?",o:["Only survival mattered","They loved art","They avoided patterns","Copied Europe"]},
- {q:"What material helped tribes gain power?",o:["Gold","Iron","Bronze","Tin"]},
- {q:"Why was bronze important?",o:["Easy to find","Stronger tools","Melts easily","Used for food"]},
- {q:"What symbolized authority?",o:["Shields","Bronze daggers","Masks","Drums"]},
- {q:"Where are bronze daggers found?",o:["Oceans","Palaces","Graves","Forests"]},
- {q:"What do dolmens show?",o:["Fear of stone","Honoring leaders","Built for farming","Storing fish"]},
- {q:"How many dolmens exist?",o:["Hundreds","10,000","30,000+","Millions"]},
- {q:"What do clans and tribes show?",o:["Lone living","Families united","No cooperation","Animals ruled"]},
- {q:"What change came as tribes grew?",o:["Cars","Kingdom idea","Stopped farming","Moved underground"]},
- {q:"What was the first Korean kingdom?",o:["Baekje","Silla","Joseon","Gaya"]},
- {q:"What does 'Joseon' mean?",o:["Thunder land","Morning Freshness","Golden Hills","Tiger land"]},
- {q:"Why 'Land of the Morning Calm'?",o:["Quiet all day","Sun rose first","No storms","Tall mountains"]}
+ {q:"What kind of homes did the earliest people on the Korean Peninsula live in?", o:["Tall stone towers","Half-buried huts with straw roofs","Wooden castles","Houses made of metal"]},
+ {q:"What is comb-pattern pottery?", o:["Pots made of metal","Pots decorated with zigzag lines and patterns","Pots shaped like animals","Pots made for storing gold"]},
+ {q:"What animals were often carved on the Bangudae petroglyphs?", o:["Giraffes","Whales and deer","Lions and elephants","Camels"]},
+ {q:"What were dolmens?", o:["Ancient bridges","Stone tombs made from huge rocks","Large weapons used in battle","Stone towers for watching the sea"]},
+ {q:"Why is bronze important in early Korean history?", o:["It was shiny","It was used to build palaces","It made stronger tools and weapons","It was easy to find everywhere"]},
+ {q:"What does the name 'Joseon' mean?", o:["Mountain Fortress","Land of Tigers","Morning Freshness","Golden Kingdom"]},
+ {q:"Who descended from heaven to guide the people, according to legend?", o:["King Sejong","Hwanung","Alexander the Great","Julius Caesar"]},
+ {q:"What trial did the bear and tiger have to undergo?", o:["Fighting a dragon","Living in a cave and eating only mugwort and garlic","Crossing a deep river","Climbing Baekdu Mountain"]},
+ {q:"Why did the tiger fail the trial?", o:["He was injured","He did not like garlic","He was impatient and left the cave","He fell asleep"]},
+ {q:"What is the purpose of the Dangun legend for Koreans today?", o:["To teach magic","To show the importance of wealth","To give a sense of origin and shared heritage","To explain how to farm"]}
 ];
 
-// -----------------------------------------
-// CORRECT ANSWERS (OBFUSCATED: XOR 7 + Base64)
-// True answer indexes (0-3) are:
-// [1,1,2,2,1,1,2,2,1,2,1,1,2,1,2,1,1,2,1,1]
-// -----------------------------------------
-const ENCODED = "BgYFBQYGBQUGBQYGBQYFBgYFBgY=";
+const ANSWERS = [1,1,1,1,2,2,1,1,2,2];
 
-function decodeAnswers() {
-    const raw = atob(ENCODED);
-    return Array.from(raw).map(ch => ch.charCodeAt(0) ^ 7);
-}
-
-const ANSWERS = decodeAnswers();
-
-// -----------------------------------------
-// SETUP 10 RANDOM QUESTIONS
-// -----------------------------------------
-let pool = Array.from({length: 20}, (_, i) => i);
-pool.sort(() => Math.random() - 0.5);
-pool = pool.slice(0, 10);
+let pool = Array.from({length: QUESTIONS.length},(_,i)=>i).sort(()=>Math.random()-0.5).slice(0,10);
 
 let pos = 0;
 let score = 0;
 
-// -----------------------------------------
-// RENDER QUESTION
-// -----------------------------------------
+// SHOW QUESTION
 function showQuestion() {
-    if (pos >= 10) {
-        finish();
-        return;
-    }
+    if (pos >= pool.length) return finish();
 
     const idx = pool[pos];
     const q = QUESTIONS[idx];
@@ -175,59 +340,69 @@ function showQuestion() {
 
     let html = "";
     q.o.forEach((opt, i) => {
-        html += `<div class="option">
-            <label><input type="radio" name="opt" value="${i}"> ${opt}</label>
-        </div>`;
+        html += `
+        <label class="option">
+            <input type="radio" name="opt" value="${i}">
+            ${opt}
+        </label>`;
     });
+
     document.getElementById("options").innerHTML = html;
 }
-
 showQuestion();
 
-// -----------------------------------------
-// SUBMIT
-// -----------------------------------------
+// SUBMIT ANSWER
 function submitAnswer() {
-    const selected = document.querySelector("input[name='opt']:checked");
-    if (!selected) return showToast("Please pick an answer!", "error");
+    const picked = document.querySelector("input[name='opt']:checked");
+    if (!picked) return showToast("Please pick an answer!", "error");
 
-    const user = parseInt(selected.value);
-    const correct = ANSWERS[pool[pos]];
-    const correctText = QUESTIONS[pool[pos]].o[correct];
+    const user = parseInt(picked.value);
+    const correctIndex = ANSWERS[pool[pos]];
+    const correctText = QUESTIONS[pool[pos]].o[correctIndex];
 
-    if (user === correct) {
+    if (user === correctIndex) {
         showToast("Correct! 🎉", "success");
         score++;
     } else {
-        showToast("Incorrect! Correct answer:\n" + correctText, "error");
+        showToast("Incorrect!\nCorrect answer:\n" + correctText, "error");
     }
 
     pos++;
     showQuestion();
 }
 
-
+// TOAST
 function showToast(msg, type="success") {
     const t = document.getElementById("toast");
     t.className = type + " show";
-    t.innerText = msg;
+    t.textContent = msg;
 
     setTimeout(() => {
         t.classList.remove("show");
     }, 2500);
 }
 
-
-// -----------------------------------------
-// FINISH
-// -----------------------------------------
+// FINISH → NAME SCREEN
 function finish() {
-    document.getElementById("quiz-box").innerHTML = `
-        <h2>Your Score</h2>
-        <p style="font-size:26px; font-weight:700; text-align:center;">
-            ${score} / 10
-        </p>
-    `;
+    document.getElementById("quiz-box").style.display = "none";
+    document.getElementById("name-screen").style.display = "block";
+}
+
+// CERTIFICATE
+function generateCertificate() {
+    const name = document.getElementById("studentName").value.trim();
+    if (!name) return;
+
+    document.getElementById("name-screen").style.display = "none";
+
+    document.getElementById("cert-name").innerText = name;
+    document.getElementById("cert-score").innerText = `Score: ${score} / ${pool.length}`;
+    document.getElementById("cert-date").innerText = "Awarded on " + new Date().toLocaleDateString();
+    document.getElementById("cert-id").innerText = "Certificate ID: KS-" + Math.random().toString(36).substring(2,10).toUpperCase();
+
+    document.getElementById("certificate").style.display = "block";
+    document.getElementById("downloadCert").style.display = "inline-block";
+
 }
 </script>
 
