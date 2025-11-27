@@ -293,14 +293,17 @@
 document.getElementById("downloadCert").addEventListener("click", function () {
     const cert = document.querySelector(".cert-box");
 
-    html2canvas(cert, {
-        scale: 3,        // super HD
-        backgroundColor: null
-    }).then(canvas => {
-        const link = document.createElement("a");
-        link.download = "kstory_certificate.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
+    // WAIT for all fonts to finish loading
+    document.fonts.ready.then(() => {
+        html2canvas(cert, {
+            scale: 3,
+            backgroundColor: null
+        }).then(canvas => {
+            const link = document.createElement("a");
+            link.download = "kstory_certificate.png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        });
     });
 });
 </script>
