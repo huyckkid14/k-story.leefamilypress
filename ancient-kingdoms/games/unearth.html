@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K-Story | Excavation Dig Game</title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(180deg, #f7eee5, #f3e2d8, #f9e8d3);
+        text-align: center;
+        color: #3a302a;
+        padding-bottom: 40px;
+    }
+
+    .hero {
+        background: linear-gradient(135deg, #d46a34, #c8553e, #a1425a, #6c4a8a, #3e5e9e);
+        color: #fff9f0;
+        padding: 50px 20px;
+        border-bottom: 8px solid #8c3d2d;
+        animation: shift 12s ease infinite;
+    }
+
+    @keyframes shift {
+        0% { background-position: 0% 40%; }
+        50% { background-position: 100% 60%; }
+        100% { background-position: 0% 40%; }
+    }
+
+    .hero h1 {
+        margin: 0;
+        font-size: 42px;
+    }
+
+    /* ===========================
+       INSTRUCTIONS PANEL
+    ============================*/
+    #instructionsBox {
+        width: 90%;
+        max-width: 650px;
+        margin: 20px auto;
+        background: #fff4e8;
+        border: 2px solid #d8a07c;
+        border-radius: 15px;
+        padding: 20px;
+        text-align: left;
+        box-shadow: 0 6px 20px rgba(120,80,50,0.2);
+    }
+
+    #instructionsBox h2 {
+        margin-top: 0;
+        text-align: center;
+        font-size: 26px;
+        color: #8c3d2d;
+    }
+
+    #instructionsToggle {
+        cursor: pointer;
+        background: #d46a34;
+        color: #fff9f0;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        font-weight: 600;
+    }
+
+    /* =========================== */
+
+    .toolbar {
+        background: #fff4e8;
+        padding: 15px;
+        margin: 20px auto;
+        width: 90%;
+        max-width: 600px;
+        border-radius: 15px;
+        border: 2px solid #d8a07c;
+        box-shadow: 0 6px 20px rgba(120,80,50,0.25);
+    }
+
+    .tool-btn {
+        background: #d46a34;
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        margin: 5px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        position: relative;
+    }
+
+    .tool-btn.active {
+        background: #9c3c0f;
+        transform: scale(1.05);
+    }
+
+    /* Tooltip */
+    .tool-btn:hover::after {
+        content: attr(data-tip);
+        position: absolute;
+        bottom: -45px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #fff4e8;
+        color: #3a302a;
+        padding: 6px 10px;
+        border-radius: 8px;
+        border: 1px solid #d8a07c;
+        font-size: 12px;
+        white-space: nowrap;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        z-index: 10;
+    }
+
+    #grid {
+        width: 90vw;
+        max-width: 500px;
+        margin: 25px auto;
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        gap: 4px;
+    }
+
+    .tile {
+        width: 100%;
+        aspect-ratio: 1;
+        background: #d2b89a;
+        border: 2px solid #9e7e64;
+        border-radius: 6px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        transition: 0.25s;
+        user-select: none;
+    }
+
+    .revealed {
+        background: #f2e0c9;
+    }
+
+    #message {
+        font-size: 22px;
+        font-weight: bold;
+        margin-top: 30px;
+        min-height: 30px;
+    }
+
+    #restart {
+        margin-top: 30px;
+        background: #d46a34;
+        color: #fff9f0;
+        padding: 12px 22px;
+        border-radius: 10px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    #restart:hover {
+        background: #b25021;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+    <h1>Unearth!</h1>
+    <p>Use tools wisely — limited uses give you higher score!</p>
+</div>
+
+<!-- ================================
+     INSTRUCTIONS BOX
+================================ -->
+<div id="instructionsBox">
+    <button id="instructionsToggle" onclick="toggleInstructions()">Hide Instructions</button>
+    <h2>How to Play</h2>
+
+    <div id="instructionsContent">
+        <p><b>Goal:</b> Find all 3 hidden artifacts buried in the 10×10 grid.</p>
+        <p><b>How to Play:</b></p>
+        <ul>
+            <li>🪓 <b>Dig</b>: Reveal a tile. If you guess wrong, you get a mistake.</li>
+            <li>🧭 <b>Scan</b>: Shows distance to nearest artifact (Hot/Warm/Cold). <b>8 uses max.</b></li>
+            <li>🪨 <b>Brush</b>: Gives a soft hint if you're close. <b>10 uses max.</b></li>
+            <li>🧲 <b>Magnet</b>: One-time special hint showing an important tile.</li>
+        </ul>
+        <p><b>Scoring:</b>  
+            You start with 1000 points.  
+            Every wrong dig = -10 points.  
+            Using tools smartly gives higher score!
+        </p>
+    </div>
+</div>
+
+<!-- ================================ -->
+
+<div class="toolbar">
+    <button class="tool-btn active" onclick="selectTool(event,'dig')" data-tip="Dig to uncover a tile">🪓 Dig</button>
+    <button class="tool-btn" onclick="selectTool(event,'scan')" data-tip="Scan soil to check hot/warm/cold distance (8 uses max)">🧭 Scan (<span id="scanLeft">8</span>)</button>
+    <button class="tool-btn" onclick="selectTool(event,'brush')" data-tip="Brush lightly for soft hints (10 uses max)">🪨 Brush (<span id="brushLeft">10</span>)</button>
+    <button class="tool-btn" onclick="useMagnet()" data-tip="One-time hint showing artifact area">🧲 Magnet</button>
+</div>
+
+<div id="grid"></div>
+
+<div id="message"></div>
+
+<button id="restart" onclick="startGame()">Restart Game</button>
+
+<script>
+const artifacts = ["🏺", "🗡️", "🐟"];
+let artifactPositions = [];
+let found = 0;
+let tool = "dig";
+let magnetUsed = false;
+
+let scanUses = 8;
+let brushUses = 10;
+
+let mistakes = 0;
+
+/* TOGGLE INSTRUCTIONS */
+function toggleInstructions() {
+    const box = document.getElementById("instructionsContent");
+    const btn = document.getElementById("instructionsToggle");
+
+    if (box.style.display === "none") {
+        box.style.display = "block";
+        btn.textContent = "Hide Instructions";
+    } else {
+        box.style.display = "none";
+        btn.textContent = "Show Instructions";
+    }
+}
+
+function updateCounts() {
+    document.getElementById("scanLeft").innerText = scanUses;
+    document.getElementById("brushLeft").innerText = brushUses;
+}
+
+function selectTool(e, t) {
+    tool = t;
+    document.querySelectorAll(".tool-btn").forEach(btn => btn.classList.remove("active"));
+    e.target.classList.add("active");
+}
+
+function useMagnet() {
+    if (magnetUsed) return;
+    magnetUsed = true;
+
+    // Get only UNREVEALED artifact tiles
+    const unrevealed = artifactPositions.filter(pos => {
+        const t = document.querySelector(`.tile[data-index='${pos}']`);
+        return !t.classList.contains("revealed");
+    });
+
+    // If somehow all are revealed, do nothing
+    if (unrevealed.length === 0) {
+        document.getElementById("message").innerText = "All artifacts already revealed!";
+        return;
+    }
+
+    // Pick a random unrevealed one
+    const revealIndex = unrevealed[Math.floor(Math.random() * unrevealed.length)];
+    const tile = document.querySelector(`.tile[data-index='${revealIndex}']`);
+
+    tile.style.background = "#ffe8a8";
+    tile.textContent = "✨";
+
+    document.getElementById("message").innerText = "Magnet shows a promising spot!";
+}
+
+
+function startGame() {
+    const grid = document.getElementById("grid");
+    grid.innerHTML = "";
+    found = 0;
+    magnetUsed = false;
+    mistakes = 0;
+
+    scanUses = 8;
+    brushUses = 10;
+    updateCounts();
+
+    document.getElementById("message").innerText = "";
+
+    let positions = [];
+    while (positions.length < 3) {
+        let pos = Math.floor(Math.random() * 100);
+        if (!positions.includes(pos)) positions.push(pos);
+    }
+    artifactPositions = positions;
+
+    for (let i = 0; i < 100; i++) {
+        const tile = document.createElement("div");
+        tile.className = "tile";
+        tile.dataset.index = i;
+
+        tile.addEventListener("click", handleTile);
+        tile.addEventListener("touchstart", handleTile);
+
+        grid.appendChild(tile);
+    }
+}
+
+function handleTile(e) {
+    const tile = e.currentTarget;
+    const idx = parseInt(tile.dataset.index);
+
+    if (tool === "dig") return dig(tile, idx);
+    if (tool === "scan") return scan(tile, idx);
+    if (tool === "brush") return brush(tile, idx);
+}
+
+/* DIG */
+function dig(tile, idx) {
+    if (tile.classList.contains("revealed")) return;
+
+    tile.classList.add("revealed");
+
+    if (artifactPositions.includes(idx)) {
+        tile.textContent = artifacts[found];
+        found++;
+
+        if (found === 3) endGame();
+    } else {
+        tile.textContent = "⬤";
+        tile.style.color = "#a67854";
+        mistakes++; // WRONG
+    }
+}
+
+/* SCAN (limited uses) */
+function scan(tile, idx) {
+    if (scanUses <= 0) {
+        document.getElementById("message").innerText = "❌ No scanner uses left!";
+        return;
+    }
+    scanUses--;
+    updateCounts();
+
+    let row = Math.floor(idx / 10);
+    let col = idx % 10;
+
+    let minDist = Infinity;
+
+    for (let p of artifactPositions) {
+        let aRow = Math.floor(p / 10);
+        let aCol = p % 10;
+
+        let dist = Math.abs(row - aRow) + Math.abs(col - aCol);
+        if (dist < minDist) minDist = dist;
+    }
+
+    if (minDist === 0) tile.textContent = "✨";
+    else if (minDist === 1) tile.textContent = "🔥";
+    else if (minDist <= 2) tile.textContent = "🌡️";
+    else tile.textContent = "❄️";
+}
+
+/* BRUSH */
+function brush(tile, idx) {
+    if (brushUses <= 0) {
+        document.getElementById("message").innerText = "❌ No brush uses left!";
+        return;
+    }
+    brushUses--;
+    updateCounts();
+
+    if (artifactPositions.includes(idx)) {
+        tile.textContent = "✨";
+        return;
+    }
+
+    let row = Math.floor(idx / 10);
+    let col = idx % 10;
+
+    let near = false;
+
+    for (let p of artifactPositions) {
+        let aRow = Math.floor(p / 10);
+        let aCol = p % 10;
+
+        let dist = Math.abs(row - aRow) + Math.abs(col - aCol);
+        if (dist <= 1) near = true;
+    }
+
+    tile.textContent = near ? "❓" : "…";
+}
+
+/* SCORE */
+function endGame() {
+    let score = Math.max(0, 1000 - mistakes * 10);
+
+    document.getElementById("message").innerHTML =
+        `🎉 You found all artifacts!<br>📊 Score: <b>${score}</b><br>❌ Mistakes: ${mistakes}`;
+}
+
+startGame();
+</script>
+
+</body>
+</html>
