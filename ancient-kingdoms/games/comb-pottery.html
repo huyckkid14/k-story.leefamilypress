@@ -58,7 +58,6 @@
             opacity: 0.95;
         }
 
-        /* TOOLBOX */
         .toolbar {
             margin: 30px auto 20px;
             padding: 15px;
@@ -87,21 +86,28 @@
         }
 
         #canvasWrapper {
-            margin: 20px auto;
             width: 420px;
             height: 420px;
-            position: relative;
+            margin: 20px auto;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* POT SHAPE MASK */
         #drawCanvas {
             width: 420px;
             height: 420px;
             background: #f5e0c8;
             border: 2px solid #d8a07c;
             box-shadow: 0 10px 20px rgba(120,80,50,0.20);
+            
+            display: block;
+            margin: 0 auto;            /* centers the canvas element */
+            transform: translateX(50px);
 
             clip-path: path("M150 20 Q210 20 270 20 Q310 80 300 150 Q290 220 210 360 Q150 420 90 360 Q10 220 0 150 Q-10 80 30 20 Z");
+            touch-action: none; /* IMPORTANT for touchscreen drawing */
         }
 
         footer {
@@ -111,6 +117,16 @@
             font-size: 14px;
             border-top: 6px solid #c17b53;
         }
+        
+        #potMask {
+            width: 420px;
+            height: 420px;
+            clip-path: path("M150 20 ...");
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
     </style>
 </head>
 
@@ -137,7 +153,10 @@
     </div>
 
     <div id="canvasWrapper">
-        <canvas id="drawCanvas" width="420" height="420"></canvas>
+        <div id="potMask">
+          <canvas id="drawCanvas" width="420" height="420"></canvas>
+        </div>
+        
     </div>
 
 </main>
@@ -157,20 +176,32 @@ let lastY = 0;
 
 function setTool(t) { tool = t; }
 
+/* GET POINTER POSITION */
 function getXY(e) {
     const rect = canvas.getBoundingClientRect();
-    return [e.clientX - rect.left, e.clientY - rect.top];
+    return [
+        e.clientX - rect.left,
+        e.clientY - rect.top
+    ];
 }
 
+/* START DRAW */
 function startDraw(e) {
+    e.preventDefault();
     drawing = true;
     [lastX, lastY] = getXY(e);
 }
 
-function stopDraw() { drawing = false; }
+/* STOP DRAW */
+function stopDraw() {
+    drawing = false;
+}
 
+/* DRAWING */
 function draw(e) {
     if (!drawing) return;
+
+    e.preventDefault();
 
     const [x, y] = getXY(e);
     const color = document.getElementById("colorPicker").value;
@@ -206,56 +237,54 @@ function draw(e) {
     lastY = y;
 }
 
+/* CLEAR */
 function clearCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-/* ⭐ NEW — EXPORT WITHOUT ERASING THE DRAWING ⭐ */
+/* SAVE PNG — unchanged from your version */
 function saveImage() {
-    // create export canvas
     const exportCanvas = document.createElement("canvas");
     exportCanvas.width = canvas.width;
     exportCanvas.height = canvas.height;
 
     const ex = exportCanvas.getContext("2d");
 
-    // 1. draw pot shape on export canvas
     drawPotShape(ex);
-
-    // 2. draw user's drawing on top
     ex.drawImage(canvas, 0, 0);
 
-    // save final merged PNG
     const link = document.createElement("a");
     link.download = "comb-pottery.png";
     link.href = exportCanvas.toDataURL("image/png");
     link.click();
 }
 
-/* ⭐ POT OUTLINE — now drawn on export canvas ONLY ⭐ */
+/* POT SHAPE OUTLINE */
 function drawPotShape(c) {
     c.fillStyle = "#f5e0c8";
     c.strokeStyle = "#d8a07c";
     c.lineWidth = 6;
 
     c.beginPath();
-    c.moveTo(150, 20);
-    c.quadraticCurveTo(210, 20, 270, 20);
-    c.quadraticCurveTo(310, 80, 300, 150);
-    c.quadraticCurveTo(290, 220, 210, 360);
-    c.quadraticCurveTo(150, 420, 90, 360);
-    c.quadraticCurveTo(10, 220, 0, 150);
-    c.quadraticCurveTo(-10, 80, 30, 20);
+    c.moveTo(205, 20);
+    c.quadraticCurveTo(265, 20, 325, 20);
+    c.quadraticCurveTo(365, 80, 355, 150);
+    c.quadraticCurveTo(345, 220, 265, 360);
+    c.quadraticCurveTo(205, 420, 145, 360);
+    c.quadraticCurveTo(65, 220, 55, 150);
+    c.quadraticCurveTo(45, 80, 85, 20);
     c.closePath();
 
     c.fill();
     c.stroke();
 }
 
-canvas.addEventListener("mousedown", startDraw);
-canvas.addEventListener("mouseup", stopDraw);
-canvas.addEventListener("mouseleave", stopDraw);
-canvas.addEventListener("mousemove", draw);
+/* ⭐ POINTER EVENTS (WORKS ON TOUCH, TRACKPAD, MOUSE) ⭐ */
+canvas.addEventListener("pointerdown", startDraw);
+canvas.addEventListener("pointerup", stopDraw);
+canvas.addEventListener("pointerleave", stopDraw);
+canvas.addEventListener("pointercancel", stopDraw);
+canvas.addEventListener("pointermove", draw);
 </script>
 
 </body>
