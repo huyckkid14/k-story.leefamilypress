@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Story Games | Ancient Kingdom Activities</title>
+
+    <style>
+        /* Make footer stay at real bottom */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(180deg, #f7eee5, #f3e2d8, #f9e8d3);
+            color: #3a302a;
+        }
+
+        main {
+            flex: 1; /* pushes footer downward */
+        }
+
+        .hero {
+            background: linear-gradient(
+                135deg,
+                #d46a34,
+                #c8553e,
+                #a1425a,
+                #6c4a8a,
+                #3e5e9e
+            );
+            background-size: 300% 300%;
+            animation: heroShift 12s ease infinite;
+
+            padding: 95px 20px;
+            text-align: center;
+            color: #fff9f0;
+            border-bottom: 8px solid #8c3d2d;
+        }
+
+        @keyframes heroShift {
+            0% { background-position: 0% 40%; }
+            50% { background-position: 100% 60%; }
+            100% { background-position: 0% 40%; }
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 48px;
+            font-weight: 800;
+        }
+
+        .hero p {
+            margin-top: 14px;
+            font-size: 18px;
+            max-width: 650px;
+            margin-inline: auto;
+            opacity: 0.95;
+        }
+
+        .intro {
+            max-width: 900px;
+            margin: 50px auto;
+            background: linear-gradient(135deg, #f5d6b9, #f7cdb3, #f9e0bf);
+            padding: 28px;
+            border-radius: 20px;
+            border: 2px solid #d8a07c;
+            box-shadow: 0 10px 30px rgba(180,120,80,0.25);
+            text-align: center;
+            color: #4d382f;
+        }
+
+        .intro h2 {
+            margin: 0;
+            font-size: 28px;
+            color: #8d3f26;
+        }
+
+        .games-container {
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .game-card {
+            background: linear-gradient(145deg, #fff8f0, #fbe8d8, #f8dcc7);
+            border: 2px solid #d2a37c;
+            border-radius: 20px;
+            padding: 26px;
+            box-shadow: 0 10px 24px rgba(120,80,50,0.25);
+            margin-bottom: 35px;
+        }
+
+        .game-card h3 {
+            margin-top: 0;
+            color: #8c3d2d;
+            font-size: 24px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #d46a34;
+            color: #fff9f0;
+            padding: 12px 22px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            background: #b25021;
+        }
+
+        footer {
+            background: linear-gradient(
+                90deg,
+                #8a3f27,
+                #7b5136,
+                #6a4b47
+            );
+            padding: 25px;
+            text-align: center;
+            color: #ffe9d5;
+            font-size: 14px;
+            margin-top: 40px;
+            border-top: 6px solid #c17b53;
+        }
+    </style>
+</head>
+
+<body>
+
+<main>
+
+    <div class="hero">
+        <h1>K-Story Games</h1>
+        <p>Play through Korea’s legends, kingdoms, and ancient stories.</p>
+    </div>
+
+    <div class="intro">
+        <h2>Interactive Learning Through Play</h2>
+        <p>
+            Here you will find games based on chapters and heroes from
+            <em>K-Story: Ancient Kingdoms</em>. More coming soon!
+        </p>
+    </div>
+
+    <div class="games-container">
+
+        <div class="game-card">
+            <h3>Comb-Pattern Pottery Drawing Tool</h3>
+            <p>Draw your own comb-pattern pottery with this activity!!</p>
+            <a class="btn" href="/ancient-kingdoms/games/comb-pottery">Play Game</a>
+        </div>
+        
+
+    </div>
+
+</main>
+
+<footer>
+    © 2025 K-Story — Classic stories, timeless history.
+</footer>
+
+</body>
+</html>
