@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Story | Do Not Cross the River</title>
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(180deg, #f7eee5, #f3e2d8, #f9e8d3);
+            color: #3a302a;
+            text-align: center;
+        }
+
+        main {
+            flex: 1;
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg,#d46a34,#c8553e,#a1425a,#6c4a8a,#3e5e9e);
+            background-size: 300% 300%;
+            animation: heroShift 12s ease infinite;
+            padding: 70px 20px;
+            color: #fff9f0;
+            border-bottom: 8px solid #8c3d2d;
+        }
+
+        @keyframes heroShift {
+            0% { background-position: 0% 20%; }
+            50% { background-position: 100% 80%; }
+            100% { background-position: 0% 20%; }
+        }
+
+        .hero h1 { font-size: 48px; margin: 0; }
+        .hero p { margin-top: 10px; font-size: 18px; }
+
+        /* HUD */
+        .hud {
+            max-width: 420px;
+            margin: 30px auto 10px;
+            background: #fff4e8;
+            border: 2px solid #d8a07c;
+            border-radius: 14px;
+            padding: 14px 18px;
+            box-shadow: 0 8px 20px rgba(120,80,50,0.25);
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .hud-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        /* BUTTONS */
+        .btn {
+            background: #d46a34;
+            color: #fff9f0;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 18px;
+            margin: 8px 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn:hover { background: #b25021; }
+        .btn.active { outline: 3px solid #ffe09b; }
+
+        /* GRID */
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 4px;
+            max-width: 420px;
+            margin: 15px auto 40px;
+        }
+
+        .tile {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            user-select: none;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .safe     { background: #96e59a; }
+        .danger   { background: #f19b8b; }
+        .hiddenTile { background: #d3c1a7; }
+        .water { background: #90c7ff; }
+
+        .playerTile { background: #bcd4ff !important; }
+        .wifeTile   { background: #ffd6ec !important; }
+
+        /* FOOTER */
+        footer {
+            background: linear-gradient(90deg,#8a3f27,#7b5136,#6a4b47);
+            color: #ffe9d5;
+            padding: 20px;
+            border-top: 6px solid #c17b53;
+            font-size: 13px;
+            margin-top: auto;
+        }
+
+        /* INSTRUCTION MODAL */
+        #instructionModal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        #instructionCard {
+            background: #fff4e8;
+            border: 3px solid #d8a07c;
+            border-radius: 18px;
+            padding: 30px 25px;
+            width: 90%;
+            max-width: 360px;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(120,80,50,0.25);
+        }
+
+        #instructionCard h2 {
+            margin-top: 0;
+            color: #8c3d2d;
+            font-size: 26px;
+        }
+
+        #instructionCard button {
+            background: #d46a34;
+            color: #fff9f0;
+            border: none;
+            padding: 12px 26px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+
+        /* END MODAL */
+        #endModal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        #endCard {
+            background: #fff4e8;
+            border: 3px solid #d8a07c;
+            border-radius: 18px;
+            padding: 30px 25px;
+            width: 90%;
+            max-width: 360px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(120,80,50,0.25);
+        }
+
+        #endCard button {
+            background: #d46a34;
+            color: #fff9f0;
+            border: none;
+            padding: 12px 26px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<main>
+
+<div class="hero">
+    <h1>Do Not Cross the River</h1>
+    <p>Memorize the safe path, then cross the river to reach your wife.</p>
+</div>
+
+<div class="hud">
+    <div class="hud-row">
+        <span><b>Score:</b> <span id="score">5000</span></span>
+        <span><b>Lives:</b> <span id="lives">3</span></span>
+    </div>
+    <div class="hud-row"><span>Looking at map decreases score.</span></div>
+    <div class="hud-row"><span>Metal Detector: –25 pts to reveal one tile.</span></div>
+</div>
+
+<div>
+    <button id="startBtn" class="btn">Start Crossing (hide map)</button>
+    <button id="scanBtn" class="btn">Metal Detector</button>
+</div>
+
+<div id="grid"></div>
+
+<footer>© 2025 K-Story — Don’t Cross the River.</footer>
+
+</main>
+
+<!-- INSTRUCTIONS MODAL -->
+<div id="instructionModal">
+    <div id="instructionCard">
+        <h2>How to Play</h2>
+        <p>• Memorize the safe (green) tiles.<br>
+        • When you press <b>Start Crossing</b>, the map hides.<br>
+        • Use arrow keys or click to move 1 tile at a time.<br>
+        • Stepping on red = lose 1 life.<br>
+        • Use the Metal Detector to check a tile (–25 pts).<br>
+        • Less wrong steps = higher score.</p>
+
+        <label>
+            <input type="checkbox" id="dontShow"> Don't show again
+        </label><br>
+
+        <button id="startInstructions">OK</button>
+    </div>
+</div>
+
+<!-- END MODAL -->
+<div id="endModal">
+    <div id="endCard">
+        <h2 id="endTitle"></h2>
+        <p id="endMsg"></p>
+        <button onclick="initGame()">Play Again</button>
+    </div>
+</div>
+
+<script>
+/* ====== CONFIG ====== */
+const ROWS = 10;
+const COLS = 10;
+const RIVER_ROW = 4;
+
+/* ====== STATE ====== */
+let safeGrid = [];
+let playerRow = 0;
+let playerCol = 0;
+let wifeRow = ROWS - 1;
+let wifeCol = COLS - 1;
+let score = 5000;
+let lives = 3;
+
+let looking = false;
+let gameStarted = false;
+let gameOver = false;
+let scanMode = false;
+
+/* DOM */
+const scoreEl = document.getElementById("score");
+const livesEl = document.getElementById("lives");
+const gridEl = document.getElementById("grid");
+const instructionModal = document.getElementById("instructionModal");
+const dontShow = document.getElementById("dontShow");
+
+/* SHOW END MODAL */
+function showEnd(title, msg) {
+    endTitle.textContent = title;
+    endMsg.innerHTML = msg;
+    endModal.style.display = "flex";
+}
+
+/* SCORE + LIVES */
+function updateScore() {
+    if (score < 0) score = 0;
+    scoreEl.textContent = score;
+}
+function updateLives() { livesEl.textContent = lives; }
+
+/* GRID GENERATION */
+function generateRandomGrid() {
+    const g = [];
+    for (let r=0;r<ROWS;r++){
+        g[r] = [];
+        for (let c=0;c<COLS;c++){
+            g[r][c] = Math.random() < 0.7;
+        }
+    }
+    g[0][0] = true;
+    g[wifeRow][wifeCol] = true;
+    return g;
+}
+
+/* BFS to check solvable */
+function pathExists(g){
+    const q=[[0,0]];
+    const seen=new Set(["0,0"]);
+    while(q.length){
+        const[r,c]=q.shift();
+        if(r===wifeRow && c===wifeCol) return true;
+        for(let[nr,nc] of [[r-1,c],[r+1,c],[r,c-1],[r,c+1]]){
+            if(nr<0||nr>=ROWS||nc<0||nc>=COLS) continue;
+            if(!g[nr][nc]) continue;
+            const key=nr+","+nc;
+            if(!seen.has(key)){
+                seen.add(key);
+                q.push([nr,nc]);
+            }
+        }
+    }
+    return false;
+}
+
+function generateSolvableGrid(){
+    let g;
+    do{ g = generateRandomGrid(); }
+    while(!pathExists(g));
+    return g;
+}
+
+/* RENDER */
+function renderGrid(showMap){
+    gridEl.innerHTML = "";
+
+    for(let r=0;r<ROWS;r++){
+        for(let c=0;c<COLS;c++){
+            const tile=document.createElement("div");
+            tile.classList.add("tile");
+
+            if(r===RIVER_ROW) {
+                tile.classList.add("water");
+            }
+
+            if(showMap){
+                tile.classList.add(safeGrid[r][c] ? "safe":"danger");
+            } else {
+                tile.classList.add("hiddenTile");
+            }
+
+            if(r===playerRow && c===playerCol){
+                tile.textContent="🧍";
+                tile.classList.add("playerTile");
+            }
+            if(r===wifeRow && c===wifeCol){
+                tile.textContent="💖";
+                tile.classList.add("wifeTile");
+            }
+
+            tile.dataset.row=r;
+            tile.dataset.col=c;
+            tile.onclick=onTileClick;
+
+            gridEl.appendChild(tile);
+        }
+    }
+}
+
+/* CLICK HANDLER */
+function onTileClick(e){
+    if(gameOver) return;
+    const r=parseInt(e.currentTarget.dataset.row);
+    const c=parseInt(e.currentTarget.dataset.col);
+
+    if(!gameStarted) return;
+
+    if(scanMode){
+        if(score>=25){
+            score-=25;
+            updateScore();
+            revealScan(r,c);
+        }
+        scanMode=false;
+        scanBtn.classList.remove("active");
+        return;
+    }
+
+    if(Math.abs(r-playerRow)+Math.abs(c-playerCol)!==1) return;
+    movePlayer(r,c);
+}
+
+function revealScan(r,c){
+    const idx=r*COLS+c;
+    const tile=gridEl.children[idx];
+    tile.className="tile "+(safeGrid[r][c]?"safe":"danger");
+}
+
+/* MOVE */
+function movePlayer(r,c){
+    if(gameOver) return;
+
+    playerRow=r;
+    playerCol=c;
+
+    if(!safeGrid[r][c] && !(r===wifeRow && c===wifeCol)){
+        lives--;
+        score-=50;
+        updateLives();
+        updateScore();
+        if(lives<=0){
+            gameOver=true;
+            renderGrid(false);
+            showEnd("💦 Swept Away","Final Score: "+score);
+            return;
+        }
+    }
+
+    if(r===wifeRow && c===wifeCol){
+        gameOver=true;
+        renderGrid(false);
+        showEnd("💖 You Made It!","Final Score: "+score);
+        return;
+    }
+
+    renderGrid(false);
+}
+
+/* ARROWS */
+document.addEventListener("keydown",(e)=>{
+    if(gameOver||!gameStarted||scanMode) return;
+
+    let nr=playerRow, nc=playerCol;
+    if(e.key==="ArrowUp") nr--;
+    else if(e.key==="ArrowDown") nr++;
+    else if(e.key==="ArrowLeft") nc--;
+    else if(e.key==="ArrowRight") nc++;
+    else return;
+
+    if(nr<0||nr>=ROWS||nc<0||nc>=COLS) return;
+    movePlayer(nr,nc);
+});
+
+/* SCORE TIMER */
+setInterval(()=>{
+    if(looking && !gameOver){
+        score--;
+        updateScore();
+    }
+},100);
+
+/* BUTTONS */
+startBtn.onclick = ()=>{
+    if(gameOver||gameStarted) return;
+    looking=false;
+    gameStarted=true;
+    renderGrid(false);
+    startBtn.disabled=true;
+};
+
+scanBtn.onclick = ()=>{
+    if(gameOver||!gameStarted) return;
+    scanMode=!scanMode;
+    scanBtn.classList.toggle("active");
+};
+
+/* INIT */
+function initGame(){
+    score=5000;
+    lives=3;
+    looking=false;
+    gameStarted=false;
+    gameOver=false;
+    scanMode=false;
+    playerRow=0;
+    playerCol=0;
+
+    updateScore();
+    updateLives();
+
+    safeGrid=generateSolvableGrid();
+
+    startBtn.disabled=false;
+    scanBtn.classList.remove("active");
+    endModal.style.display="none";
+
+    /* Show instructions first */
+    if(!localStorage.getItem("hideRiverInstructions")){
+        instructionModal.style.display="flex";
+        looking = false;
+    } else {
+        looking = true;
+    }
+
+    renderGrid(true);
+}
+
+/* Instructions OK */
+startInstructions.onclick = ()=>{
+    if(dontShow.checked){
+        localStorage.setItem("hideRiverInstructions","1");
+    }
+    instructionModal.style.display="none";
+    looking=true;
+};
+
+initGame();
+</script>
+
+</body>
+</html>
