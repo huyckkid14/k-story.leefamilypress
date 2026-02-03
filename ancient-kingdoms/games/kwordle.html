@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KWORDLE | K-Story</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(180deg, #f7eee5, #f3e2d8, #f9e8d3);
+    text-align: center;
+    color: #3a302a;
+}
+
+/* HERO */
+.hero {
+    background: linear-gradient(135deg, #d46a34, #c8553e, #a1425a, #6c4a8a, #3e5e9e);
+    color: #fff9f0;
+    padding: 50px 20px;
+    border-bottom: 8px solid #8c3d2d;
+}
+
+.hero h1 {
+    margin: 0;
+    font-size: 46px;
+}
+
+/* INSTRUCTIONS */
+#instructionsBox {
+    width: 90%;
+    max-width: 650px;
+    margin: 20px auto;
+    background: #fff4e8;
+    border: 2px solid #d8a07c;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: left;
+    box-shadow: 0 6px 20px rgba(120,80,50,0.2);
+}
+
+#instructionsToggle {
+    cursor: pointer;
+    background: #d46a34;
+    color: #fff9f0;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 10px;
+}
+
+/* BOARD */
+#board {
+    margin: 30px auto;
+    display: grid;
+    gap: 6px;
+    justify-content: center;
+}
+
+.tile {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #9e7e64;
+    background: #d2b89a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    font-weight: bold;
+    border-radius: 8px;
+}
+
+/* COLORS */
+.correct { background:#6aaa64; color:white; }
+.present { background:#c9b458; color:white; }
+.absent { background:#787c7e; color:white; }
+
+/* INPUT */
+#guessInput {
+    padding: 12px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: 2px solid #9e7e64;
+    margin-top: 10px;
+    text-transform: uppercase;
+}
+
+button {
+    background: #d46a34;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    margin-left: 10px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+#message {
+    margin-top: 20px;
+    font-size: 22px;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+<h1>KWORDLE</h1>
+<p>Guess the Korean King or Founder from K-Story</p>
+</div>
+
+<div id="instructionsBox">
+<button id="instructionsToggle" onclick="toggleInstructions()">Hide Instructions</button>
+<div id="instructionsContent">
+<p><b>Goal:</b> Guess the hidden Korean king.</p>
+<p>🟩 Correct letter & spot</p>
+<p>🟨 Correct letter wrong spot</p>
+<p>⬜ Letter not in name</p>
+</div>
+</div>
+
+<div id="board"></div>
+
+<input id="guessInput" placeholder="Enter king name">
+<button onclick="submitGuess()">Guess</button>
+
+<div id="message"></div>
+
+<script>
+
+/* VALID ANSWERS FROM BOOK */
+const words = [
+"DANGUN",
+"JUMONG",
+"YURI",
+"ONJO",
+"HYEOKGEOSE",
+"SURO",
+"DAEMUSIN",
+"GOI",
+"GEUNCHOGO",
+"GWANGGAETO",
+"JANGSU",
+"MU"
+];
+
+let answer = words[Math.floor(Math.random()*words.length)];
+let maxLength = answer.length;
+let tries = 6;
+let currentRow = 0;
+
+const board = document.getElementById("board");
+board.style.gridTemplateColumns = `repeat(${maxLength}, 60px)`;
+
+/* BUILD GRID */
+for(let r=0;r<tries;r++){
+    for(let c=0;c<maxLength;c++){
+        let tile = document.createElement("div");
+        tile.className="tile";
+        tile.id=`${r}-${c}`;
+        board.appendChild(tile);
+    }
+}
+
+/* TOGGLE */
+function toggleInstructions(){
+    const box = document.getElementById("instructionsContent");
+    box.style.display = box.style.display==="none"?"block":"none";
+}
+
+/* GUESS */
+function submitGuess(){
+
+    let guess = document.getElementById("guessInput").value.toUpperCase();
+
+    if(guess.length !== maxLength){
+        alert("Must be " + maxLength + " letters");
+        return;
+    }
+
+    if(!words.includes(guess)){
+        alert("Not a valid king name");
+        return;
+    }
+
+    let answerArr = answer.split("");
+    let guessArr = guess.split("");
+
+    /* GREEN PASS */
+    for(let i=0;i<maxLength;i++){
+        let tile = document.getElementById(`${currentRow}-${i}`);
+        tile.textContent = guessArr[i];
+
+        if(guessArr[i] === answerArr[i]){
+            tile.classList.add("correct");
+            answerArr[i] = null;
+            guessArr[i] = null;
+        }
+    }
+
+    /* YELLOW / GRAY PASS */
+    for(let i=0;i<maxLength;i++){
+        if(guessArr[i] === null) continue;
+
+        let tile = document.getElementById(`${currentRow}-${i}`);
+
+        if(answerArr.includes(guessArr[i])){
+            tile.classList.add("present");
+            answerArr[answerArr.indexOf(guessArr[i])] = null;
+        } else {
+            tile.classList.add("absent");
+        }
+    }
+
+    /* WIN */
+    if(guess === answer){
+        document.getElementById("message").innerText = "🎉 Correct!";
+        return;
+    }
+
+    currentRow++;
+
+    if(currentRow === tries){
+        document.getElementById("message").innerText =
+        "Answer was: " + answer;
+    }
+
+    document.getElementById("guessInput").value="";
+}
+
+</script>
+
+</body>
+</html>
