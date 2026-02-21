@@ -45,16 +45,12 @@ body{
     user-select:none;
 }
 
-.tile.active{
-    outline:3px solid #d46a34;
-}
+.tile.active{ outline:3px solid #d46a34; }
 
-/* COLORS */
 .correct{background:#6aaa64;color:white;}
 .present{background:#c9b458;color:white;}
 .absent{background:#787c7e;color:white;}
 
-/* FLIP */
 .flip{animation:flip .4s ease;}
 @keyframes flip{
     0%{transform:rotateX(0)}
@@ -76,6 +72,51 @@ body{
     transition:.3s;
     pointer-events:none;
 }
+
+/* INSTRUCTIONS MODAL */
+#modalOverlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
+}
+
+#modal{
+    background:white;
+    width:90%;
+    max-width:420px;
+    border-radius:14px;
+    padding:25px;
+    text-align:left;
+    box-shadow:0 20px 40px rgba(0,0,0,.3);
+}
+
+#modal h2{
+    margin-top:0;
+    text-align:center;
+}
+
+#modal button{
+    width:100%;
+    margin-top:18px;
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    font-weight:bold;
+    cursor:pointer;
+    background:#d46a34;
+    color:white;
+}
+
+.checkbox-row{
+    margin-top:12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
 </style>
 </head>
 
@@ -89,7 +130,46 @@ body{
 <div id="board"></div>
 <div id="toast"></div>
 
+<!-- INSTRUCTIONS MODAL -->
+<div id="modalOverlay" style="display:none;">
+    <div id="modal">
+        <h2>How To Play</h2>
+        <p>
+        • You have 6 tries to guess the king.<br><br>
+        • Guesses must be either:<br>
+          - A real English word<br>
+          - OR a valid Korean king from the list<br><br>
+        • Green = correct spot<br>
+        • Yellow = correct letter, wrong spot<br>
+        • Gray = not in word
+        </p>
+
+        <div class="checkbox-row">
+            <input type="checkbox" id="dontShow">
+            <label for="dontShow">Do not show again</label>
+        </div>
+
+        <button onclick="closeModal()">Start Playing</button>
+    </div>
+</div>
+
 <script>
+
+/* =====================
+   SHOW INSTRUCTIONS
+===================== */
+window.onload=function(){
+    if(!localStorage.getItem("kwordle_hide_instructions")){
+        document.getElementById("modalOverlay").style.display="flex";
+    }
+};
+
+function closeModal(){
+    if(document.getElementById("dontShow").checked){
+        localStorage.setItem("kwordle_hide_instructions","true");
+    }
+    document.getElementById("modalOverlay").style.display="none";
+}
 
 /* =====================
    KING WORD LIST
@@ -106,7 +186,6 @@ let length = answer.length;
 let tries = 6;
 let row = 0;
 let col = 0;
-
 let guesses = Array.from({length:tries},()=>Array(length).fill(""));
 
 /* =====================
@@ -128,9 +207,6 @@ for(let r=0;r<tries;r++){
 
 highlight();
 
-/* =====================
-   CURSOR
-===================== */
 function setCursor(r,c){
     if(r!==row) return;
     col=c;
@@ -140,7 +216,6 @@ function setCursor(r,c){
 function highlight(){
     document.querySelectorAll(".tile")
     .forEach(t=>t.classList.remove("active"));
-
     let tile=getTile(row,col);
     if(tile) tile.classList.add("active");
 }
@@ -151,9 +226,6 @@ function getTile(r,c){
     );
 }
 
-/* =====================
-   TOAST
-===================== */
 function toast(msg){
     const t=document.getElementById("toast");
     t.textContent=msg;
@@ -161,11 +233,7 @@ function toast(msg){
     setTimeout(()=>t.style.opacity=0,1800);
 }
 
-/* =====================
-   KEYBOARD INPUT
-===================== */
 document.addEventListener("keydown",e=>{
-
     if(row>=tries) return;
 
     if(/^[a-z]$/i.test(e.key)){
@@ -189,36 +257,21 @@ document.addEventListener("keydown",e=>{
     if(e.key==="Enter"){
         submitGuess();
     }
-
 });
 
-/* =====================
-   DICTIONARY CHECK
-===================== */
 async function isRealWord(word){
     try{
         const res = await fetch(
             `https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`
         );
-
-        if(!res.ok){
-            return false; // 404 = not real word
-        }
-
+        if(!res.ok) return false;
         const data = await res.json();
-
-        // If API returns array, it's valid
         return Array.isArray(data);
-
-    }catch(err){
-        console.error(err);
+    }catch{
         return false;
     }
 }
 
-/* =====================
-   SUBMIT GUESS
-===================== */
 async function submitGuess(){
 
     if(guesses[row].includes("")){
@@ -228,10 +281,7 @@ async function submitGuess(){
 
     let guess = guesses[row].join("");
 
-    /* FIRST: king list check */
     let isKing = words.includes(guess);
-
-    /* SECOND: dictionary check */
     let isReal = await isRealWord(guess);
 
     if(!isKing && !isReal){
@@ -242,7 +292,6 @@ async function submitGuess(){
     let answerArr=answer.split("");
     let guessArr=guess.split("");
 
-    /* GREEN PASS */
     for(let i=0;i<length;i++){
         if(guessArr[i]===answerArr[i]){
             answerArr[i]=null;
@@ -251,10 +300,8 @@ async function submitGuess(){
         }
     }
 
-    /* YELLOW / GRAY */
     for(let i=0;i<length;i++){
         if(guessArr[i]==null) continue;
-
         if(answerArr.includes(guessArr[i])){
             answerArr[answerArr.indexOf(guessArr[i])]=null;
             paint(i,"present");
@@ -278,12 +325,8 @@ async function submitGuess(){
     }
 }
 
-/* =====================
-   PAINT
-===================== */
 function paint(i,color){
     let tile=getTile(row,i);
-
     setTimeout(()=>{
         tile.classList.add("flip");
         setTimeout(()=>{
