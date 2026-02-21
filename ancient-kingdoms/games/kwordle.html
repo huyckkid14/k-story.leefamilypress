@@ -107,7 +107,6 @@ let tries = 6;
 let row = 0;
 let col = 0;
 
-/* Track guesses */
 let guesses = Array.from({length:tries},()=>Array(length).fill(""));
 
 /* =====================
@@ -153,7 +152,7 @@ function getTile(r,c){
 }
 
 /* =====================
-   TOAST MESSAGE
+   TOAST
 ===================== */
 function toast(msg){
     const t=document.getElementById("toast");
@@ -169,7 +168,6 @@ document.addEventListener("keydown",e=>{
 
     if(row>=tries) return;
 
-    /* LETTER */
     if(/^[a-z]$/i.test(e.key)){
         if(col<length){
             guesses[row][col]=e.key.toUpperCase();
@@ -179,7 +177,6 @@ document.addEventListener("keydown",e=>{
         }
     }
 
-    /* BACKSPACE */
     if(e.key==="Backspace"){
         if(col>0){
             col--;
@@ -189,7 +186,6 @@ document.addEventListener("keydown",e=>{
         }
     }
 
-    /* ENTER */
     if(e.key==="Enter"){
         submitGuess();
     }
@@ -197,11 +193,34 @@ document.addEventListener("keydown",e=>{
 });
 
 /* =====================
+   DICTIONARY CHECK
+===================== */
+async function isRealWord(word){
+    try{
+        const res = await fetch(
+            `https://api.dictionaryapi.dev/api/v2/entries/en/${word.toLowerCase()}`
+        );
+
+        if(!res.ok){
+            return false; // 404 = not real word
+        }
+
+        const data = await res.json();
+
+        // If API returns array, it's valid
+        return Array.isArray(data);
+
+    }catch(err){
+        console.error(err);
+        return false;
+    }
+}
+
+/* =====================
    SUBMIT GUESS
 ===================== */
-function submitGuess(){
+async function submitGuess(){
 
-    /* FIXED VALIDATION */
     if(guesses[row].includes("")){
         toast("Not enough letters");
         return;
@@ -209,8 +228,14 @@ function submitGuess(){
 
     let guess = guesses[row].join("");
 
-    if(!words.includes(guess)){
-        toast("Not in king list");
+    /* FIRST: king list check */
+    let isKing = words.includes(guess);
+
+    /* SECOND: dictionary check */
+    let isReal = await isRealWord(guess);
+
+    if(!isKing && !isReal){
+        toast("Not a real word");
         return;
     }
 
@@ -238,7 +263,6 @@ function submitGuess(){
         }
     }
 
-    /* WIN */
     if(guess===answer){
         toast("🎉 Correct!");
         row=tries;
@@ -255,7 +279,7 @@ function submitGuess(){
 }
 
 /* =====================
-   PAINT TILES
+   PAINT
 ===================== */
 function paint(i,color){
     let tile=getTile(row,i);
